@@ -1,0 +1,22 @@
+create or replace trigger audittrial
+after
+update of sal
+on e1
+for each row
+begin
+insert into audittrial values(:OLD.empno,:OLD.sal,:NEW.sal,SYSDATE);
+end;
+/
+
+create or replace trigger err
+before
+update of sal
+on e1
+for each row
+begin
+if(:old.sal > :new.sal)
+then
+raise_application_error(-20001,'Enter larger salary');
+end if;
+end;
+/
