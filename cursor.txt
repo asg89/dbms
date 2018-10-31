@@ -1,0 +1,173 @@
+create table plemp(id number,name varchar(10),sal number,deptno number,birthday date);
+
+
+insert into plemp values(1,'Shashank',100000,1,'01-APR-1998');
+insert into plemp values(1,'Ashu',100,2,'25-DEC-1998');
+insert into plemp values(1,'Aswin',200000,3,'02-FEB-1998');
+insert into plemp values(1,'Adarsh',1000,1,'01-JAN-1998');
+
+
+
+
+
+
+
+
+
+
+
+
+
+declare
+   n plemp.name%type;
+   sl plemp.sal%type;
+cursor c_emp is
+    select name,sal from plemp;
+  begin
+  open c_emp;
+  loop
+  fetch c_emp into n,sl;
+  exit when c_emp%NOTFOUND;
+  dbms_output.put_line(n||' '||sl);
+   end loop;
+    close c_emp;
+end;
+/
+
+
+
+declare
+   n plemp.name%type;
+   sl plemp.birthday%type;
+cursor c_emp is
+    select name,birthday from plemp;
+  begin
+  open c_emp;
+  loop
+  fetch c_emp into n,sl;
+  exit when c_emp%NOTFOUND;
+  dbms_output.put_line(n||' '||sl);
+   end loop;
+    close c_emp;
+end;
+/
+
+declare
+   n plemp.name%type;
+   sa plemp.sal%type;
+   s number;
+cursor c_emp is
+    select name,sal from plemp;
+  begin
+  open c_emp;
+  loop
+  fetch c_emp into n,sa;
+  exit when c_emp%NOTFOUND;
+  s:=0.1*sa;
+  dbms_output.put_line(n||' '||s);
+   end loop;
+    close c_emp;
+end;
+/
+
+declare
+   d plemp.deptno%type;
+   n plemp.name%type;
+   sl plemp.sal%type;
+   temp  number;
+   did number;
+   cursor c_emp is
+    select deptno,name,sal from plemp;
+  begin
+  open c_emp;
+  did:=&did;
+  loop
+  fetch c_emp into d,n,sl;
+  exit when c_emp%NOTFOUND;
+  if (did=d) then
+    temp:=sl;
+	sl:=sl+1000;
+	update plemp set sal=sl where name=n;
+  dbms_output.put_line(n||' '||temp||' '||sl);
+  end if;
+   end loop;
+    close c_emp;
+end;
+/
+
+ declare
+    n plemp.name%type;
+    date plemp.birthday%type;
+	month varchar(3);
+    cursor c_emp is
+     select name,substr(birthday,4,3) from plemp;
+   begin
+   open c_emp;
+    dbms_output.put_line('Name'||'   '||'MONTH');
+   loop
+   fetch c_emp into n,month;
+   exit when c_emp%NOTFOUND;
+   dbms_output.put_line(n||' '||month);
+    end loop;
+     close c_emp;
+ end;
+ /
+ 
+ declare
+	d plemp.deptno%type;
+	ag number;
+	ag1 number;
+	ag2 number;
+	d1 number;
+	d2 number;
+	diff number;
+    cursor c_emp is
+     select deptno,avg(sal) from plemp group by deptno;
+   begin
+   open c_emp;
+   d1:=&d1;
+   d2:=&d2;
+   loop
+   fetch c_emp into d,ag;
+   exit when c_emp%NOTFOUND;
+   if(d=d1) then
+      ag1:=ag;
+	  end if;
+	   if(d=d2) then
+      ag2:=ag;
+	  end if;
+    end loop;
+	diff:=ag2-ag1;
+	dbms_output.put_line('AVG SAL DIFFERENCE='||' '||diff);
+     close c_emp;
+ end;
+ /
+ 
+ declare
+
+   i number;
+cursor c_emp is
+    select name,sal from plemp order by sal desc;
+  begin
+    for i in c_emp
+	
+  loop
+  
+     dbms_output.put_line(i.name || ' ' || i.sal );
+end loop;
+end;
+/
+
+  declare 
+     d number;
+	 
+     
+     cursor  c1(deptno) is
+	  select name,sal,deptno from plemp;
+	  begin
+	 d:=&d;
+	 open c1(d);
+	 loop
+         fetch c1 into myrecord	 
+	 
+
